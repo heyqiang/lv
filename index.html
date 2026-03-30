@@ -1,0 +1,743 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>铝价预测周报 | 2026年3月30日-4月3日</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-annotation@3.0.1"></script>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'PingFang SC', 'Microsoft YaHei', 'Helvetica Neue', sans-serif;
+      background: #F0F2F5;
+      color: #212121;
+      line-height: 1.6;
+    }
+    .container { max-width: 1200px; margin: 0 auto; padding: 0 20px 60px; }
+    .header {
+      background: linear-gradient(135deg, #0D1B2A 0%, #1B2838 50%, #1565C0 100%);
+      color: #fff;
+      padding: 40px 0 32px;
+    }
+    .header h1 { font-size: 28px; font-weight: 700; }
+    .header .subtitle { font-size: 14px; color: rgba(255,255,255,0.6); margin-top: 4px; }
+    .section {
+      background: #fff;
+      border-radius: 16px;
+      padding: 28px;
+      margin-top: 24px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+    }
+    .section-title {
+      font-size: 18px;
+      font-weight: 600;
+      margin-bottom: 20px;
+      padding-bottom: 10px;
+      border-bottom: 2px solid #E8EDF2;
+    }
+    .chart-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+    }
+    .chart-box { position: relative; height: 380px; }
+    .chart-label {
+      font-size: 14px;
+      font-weight: 600;
+      color: #546E7A;
+      margin-bottom: 8px;
+    }
+
+    /* Table */
+    table { width: 100%; border-collapse: separate; border-spacing: 0; font-size: 13px; }
+    thead th {
+      background: #F5F7FA;
+      padding: 12px 10px;
+      text-align: center;
+      font-weight: 600;
+      color: #37474F;
+      border-bottom: 2px solid #E0E0E0;
+      white-space: nowrap;
+    }
+    thead th:first-child { text-align: left; border-radius: 8px 0 0 0; }
+    thead th:last-child { border-radius: 0 8px 0 0; }
+    tbody td {
+      padding: 12px 10px;
+      text-align: center;
+      border-bottom: 1px solid #F0F0F0;
+    }
+    tbody td:first-child { text-align: left; font-weight: 600; }
+    tbody tr:hover { background: #FAFBFD; }
+    tbody tr.actual-row { background: #F0F7FF; }
+    .val { font-size: 16px; font-weight: 700; }
+    .val-lme { color: #1565C0; }
+    .val-shfe { color: #E65100; }
+    .sub { font-size: 11px; color: #9E9E9E; }
+    .badge {
+      display: inline-block;
+      padding: 2px 10px;
+      border-radius: 10px;
+      font-size: 11px;
+      font-weight: 700;
+    }
+    .badge-100 { background: #1565C0; color: #fff; }
+    .badge-high { background: #E8F5E9; color: #2E7D32; }
+    .badge-mid { background: #FFF3E0; color: #E65100; }
+    .badge-low { background: #FFF8E1; color: #F57F17; }
+    .driver { font-size: 12px; color: #757575; max-width: 260px; line-height: 1.4; }
+    .legend-hint {
+      display: flex; gap: 24px; margin-bottom: 16px; font-size: 12px; color: #9E9E9E;
+    }
+    .legend-hint span { display: flex; align-items: center; gap: 6px; }
+    .dot { width: 10px; height: 10px; border-radius: 50%; display: inline-block; }
+
+    @media (max-width: 768px) {
+      .chart-row { grid-template-columns: 1fr; }
+      .chart-box { height: 300px; }
+      table { font-size: 12px; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="header">
+    <div class="container">
+      <h1>铝价预测周报</h1>
+      <div class="subtitle">2026年3月30日 - 4月13日（未来10个交易日） | 北京时间</div>
+      <div id="timestamps" style="margin-top:6px; font-size:12px; opacity:0.5; line-height:1.8;"></div>
+    </div>
+  </div>
+
+  <div class="container">
+
+    <!-- Module 1a: International (LME) -->
+    <div class="section">
+      <div class="section-title">一、国际铝价走势 — LME伦敦金属交易所（美元/吨）</div>
+      <div class="chart-box"><canvas id="lmeChart"></canvas></div>
+    </div>
+
+    <!-- Module 1b: Domestic (SHFE/SMM) -->
+    <div class="section">
+      <div class="section-title">二、国内铝价走势 — 沪铝/SMM现货（元/吨）</div>
+      <div class="chart-box"><canvas id="shfeChart"></canvas></div>
+    </div>
+
+    <!-- Module 2: Daily Forecast Table -->
+    <div class="section">
+      <div class="section-title">三、每日价格预测详表</div>
+      <div style="overflow-x: auto;">
+        <table id="forecastTable"></table>
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    // ============================================================
+    //  DATA (JSON)
+    // ============================================================
+    const DATA = {
+      "meta": {
+            "title": "铝价预测周报",
+            "period": "2026-03-30 ~ 2026-04-13",
+            "timezone": "Asia/Shanghai",
+            "updated": "2026-03-30T15:27:41+08:00"
+      },
+      "lme": {
+            "unit": "美元/吨",
+            "dates": [
+                  "3/16",
+                  "3/17",
+                  "3/18",
+                  "3/19",
+                  "3/20",
+                  "3/23",
+                  "3/24",
+                  "3/25",
+                  "3/26",
+                  "3/27",
+                  "3/30",
+                  "3/31",
+                  "4/1",
+                  "4/2",
+                  "4/3",
+                  "4/6",
+                  "4/7",
+                  "4/8",
+                  "4/9",
+                  "4/10",
+                  "4/13"
+            ],
+            "actual": [
+                  3250,
+                  3270,
+                  3310,
+                  3340,
+                  3192,
+                  3240,
+                  3265,
+                  3280,
+                  3350,
+                  3284.5,
+                  3340.5,
+                  null,
+                  null,
+                  null,
+                  null,
+                  null,
+                  null,
+                  null,
+                  null,
+                  null,
+                  null
+            ],
+            "predicted": [
+                  null,
+                  null,
+                  null,
+                  null,
+                  null,
+                  null,
+                  null,
+                  null,
+                  null,
+                  null,
+                  3340.5,
+                  3470,
+                  3440,
+                  3420,
+                  3400,
+                  3385,
+                  3370,
+                  3360,
+                  3350,
+                  3345,
+                  3340
+            ]
+      },
+      "shfe": {
+            "unit": "元/吨",
+            "dates": [
+                  "3/16",
+                  "3/17",
+                  "3/18",
+                  "3/19",
+                  "3/20",
+                  "3/23",
+                  "3/24",
+                  "3/25",
+                  "3/26",
+                  "3/27",
+                  "3/30",
+                  "3/31",
+                  "4/1",
+                  "4/2",
+                  "4/3",
+                  "4/6",
+                  "4/7",
+                  "4/8",
+                  "4/9",
+                  "4/10",
+                  "4/13"
+            ],
+            "actual": [
+                  23500,
+                  23550,
+                  23700,
+                  23800,
+                  23400,
+                  23550,
+                  23810,
+                  23750,
+                  23900,
+                  23795,
+                  23935.0,
+                  null,
+                  null,
+                  null,
+                  null,
+                  null,
+                  null,
+                  null,
+                  null,
+                  null,
+                  null
+            ],
+            "predicted": [
+                  null,
+                  null,
+                  null,
+                  null,
+                  null,
+                  null,
+                  null,
+                  null,
+                  null,
+                  null,
+                  23935.0,
+                  24650,
+                  24500,
+                  24400,
+                  24320,
+                  24250,
+                  24200,
+                  24160,
+                  24120,
+                  24090,
+                  24060
+            ]
+      },
+      "daily_forecast": [
+            {
+                  "date": "2026-03-30",
+                  "weekday": "周一",
+                  "is_actual": true,
+                  "lme": {
+                        "predicted": 3295,
+                        "actual": 3340.5,
+                        "low": 3260,
+                        "high": 3330
+                  },
+                  "shfe": {
+                        "predicted": 23850,
+                        "actual": 23935.0,
+                        "low": 23700,
+                        "high": 24000
+                  },
+                  "confidence": 1.0,
+                  "confidence_factors": {
+                        "data_status": "已收盘",
+                        "source": "yfinance/COMEX ALI=F, akshare/SHFE主力合约(Sina), yfinance/DX-Y.NYB",
+                        "deviation_lme": "+1.38%",
+                        "deviation_shfe": "+0.36%",
+                        "warnings": "SHFE仅单源验证"
+                  },
+                  "driver": "中东地缘冲突急剧升级，供应冲击恐慌推动铝价单日暴涨"
+            },
+            {
+                  "date": "2026-03-31",
+                  "weekday": "周二",
+                  "is_actual": false,
+                  "lme": {
+                        "predicted": 3470,
+                        "actual": null,
+                        "low": 3410,
+                        "high": 3530
+                  },
+                  "shfe": {
+                        "predicted": 24650,
+                        "actual": null,
+                        "low": 24400,
+                        "high": 24900
+                  },
+                  "confidence": 0.55,
+                  "confidence_factors": {
+                        "macro_event": "中国3月PMI发布",
+                        "geopolitical": "中东局势不确定性极高",
+                        "technical": "前日暴涨后波动率放大",
+                        "momentum": "短期强势惯性"
+                  },
+                  "driver": "中国3月PMI发布，叠加前日暴涨惯性；若PMI>50可能进一步冲高"
+            },
+            {
+                  "date": "2026-04-01",
+                  "weekday": "周三",
+                  "is_actual": false,
+                  "lme": {
+                        "predicted": 3440,
+                        "actual": null,
+                        "low": 3380,
+                        "high": 3510
+                  },
+                  "shfe": {
+                        "predicted": 24500,
+                        "actual": null,
+                        "low": 24250,
+                        "high": 24750
+                  },
+                  "confidence": 0.6,
+                  "confidence_factors": {
+                        "technical": "急涨后技术性回调压力",
+                        "profit_taking": "短线多头获利了结",
+                        "supply": "供应紧张格局限制跌幅"
+                  },
+                  "driver": "急涨后技术性回调压力显现；供应紧张格局限制下行空间"
+            },
+            {
+                  "date": "2026-04-02",
+                  "weekday": "周四",
+                  "is_actual": false,
+                  "lme": {
+                        "predicted": 3420,
+                        "actual": null,
+                        "low": 3360,
+                        "high": 3480
+                  },
+                  "shfe": {
+                        "predicted": 24400,
+                        "actual": null,
+                        "low": 24150,
+                        "high": 24650
+                  },
+                  "confidence": 0.65,
+                  "confidence_factors": {
+                        "pattern": "高位震荡盘整",
+                        "usd": "美元走势成为短期变量",
+                        "geopolitical": "关注中东最新进展"
+                  },
+                  "driver": "高位震荡盘整；市场消化地缘溢价，关注中东局势最新进展"
+            },
+            {
+                  "date": "2026-04-03",
+                  "weekday": "周五",
+                  "is_actual": false,
+                  "lme": {
+                        "predicted": 3400,
+                        "actual": null,
+                        "low": 3330,
+                        "high": 3470
+                  },
+                  "shfe": {
+                        "predicted": 24320,
+                        "actual": null,
+                        "low": 24050,
+                        "high": 24580
+                  },
+                  "confidence": 0.6,
+                  "confidence_factors": {
+                        "weekend_effect": "多头周末前减仓避险",
+                        "profit_taking": "累计涨幅较大引发获利抛压",
+                        "support": "基本面偏紧限制深跌"
+                  },
+                  "driver": "周末前部分多头减仓避险；价格较周初高点小幅回落但仍维持高位"
+            },
+            {
+                  "date": "2026-04-06",
+                  "weekday": "周一",
+                  "is_actual": false,
+                  "lme": {
+                        "predicted": 3385,
+                        "actual": null,
+                        "low": 3320,
+                        "high": 3450
+                  },
+                  "shfe": {
+                        "predicted": 24250,
+                        "actual": null,
+                        "low": 23980,
+                        "high": 24520
+                  },
+                  "confidence": 0.55,
+                  "confidence_factors": {
+                        "holiday_risk": "临近清明节，注意休市安排",
+                        "consolidation": "第二周高位盘整延续",
+                        "geopolitical": "中东局势演变仍是核心变量"
+                  },
+                  "driver": "新一周开盘，延续高位盘整；清明节前后交投可能趋于清淡"
+            },
+            {
+                  "date": "2026-04-07",
+                  "weekday": "周二",
+                  "is_actual": false,
+                  "lme": {
+                        "predicted": 3370,
+                        "actual": null,
+                        "low": 3305,
+                        "high": 3435
+                  },
+                  "shfe": {
+                        "predicted": 24200,
+                        "actual": null,
+                        "low": 23930,
+                        "high": 24470
+                  },
+                  "confidence": 0.5,
+                  "confidence_factors": {
+                        "time_decay": "远期预测不确定性增大",
+                        "mean_reversion": "均值回归压力渐显",
+                        "demand": "下游消费数据待验证"
+                  },
+                  "driver": "地缘溢价逐步消化，市场关注实际消费能否支撑高位价格"
+            },
+            {
+                  "date": "2026-04-08",
+                  "weekday": "周三",
+                  "is_actual": false,
+                  "lme": {
+                        "predicted": 3360,
+                        "actual": null,
+                        "low": 3290,
+                        "high": 3425
+                  },
+                  "shfe": {
+                        "predicted": 24160,
+                        "actual": null,
+                        "low": 23890,
+                        "high": 24430
+                  },
+                  "confidence": 0.5,
+                  "confidence_factors": {
+                        "time_decay": "远期预测不确定性高",
+                        "inventory": "关注LME库存周度变化",
+                        "energy": "能源成本走向影响冶炼端"
+                  },
+                  "driver": "关注LME库存周报数据；能源成本变化影响冶炼成本支撑"
+            },
+            {
+                  "date": "2026-04-09",
+                  "weekday": "周四",
+                  "is_actual": false,
+                  "lme": {
+                        "predicted": 3350,
+                        "actual": null,
+                        "low": 3280,
+                        "high": 3415
+                  },
+                  "shfe": {
+                        "predicted": 24120,
+                        "actual": null,
+                        "low": 23850,
+                        "high": 24390
+                  },
+                  "confidence": 0.45,
+                  "confidence_factors": {
+                        "time_decay": "第二周末段预测可靠性降低",
+                        "macro": "美联储官员讲话或影响美元走势",
+                        "supply": "中东供应恢复进度是关键"
+                  },
+                  "driver": "价格逐步寻找新均衡位；中东供应恢复预期与实际消费博弈"
+            },
+            {
+                  "date": "2026-04-10",
+                  "weekday": "周五",
+                  "is_actual": false,
+                  "lme": {
+                        "predicted": 3345,
+                        "actual": null,
+                        "low": 3275,
+                        "high": 3410
+                  },
+                  "shfe": {
+                        "predicted": 24090,
+                        "actual": null,
+                        "low": 23820,
+                        "high": 24360
+                  },
+                  "confidence": 0.45,
+                  "confidence_factors": {
+                        "time_decay": "远期预测置信度较低",
+                        "weekend_effect": "周末避险减仓",
+                        "trend": "两周累计回调趋势"
+                  },
+                  "driver": "两周预测终点；预计较3/30高点回调约2-3%，进入新价格中枢"
+            },
+            {
+                  "date": "2026-04-13",
+                  "weekday": "周一",
+                  "is_actual": false,
+                  "lme": {
+                        "predicted": 3340,
+                        "actual": null,
+                        "low": 3270,
+                        "high": 3405
+                  },
+                  "shfe": {
+                        "predicted": 24060,
+                        "actual": null,
+                        "low": 23790,
+                        "high": 24330
+                  },
+                  "confidence": 0.4,
+                  "confidence_factors": {
+                        "time_decay": "最远期预测，仅供参考",
+                        "uncertainty": "两周后市场可能出现新催化剂",
+                        "baseline": "基于当前信息的基准外推"
+                  },
+                  "driver": "第三周开盘；预测仅为基于当前趋势的基准外推，实际受新信息驱动"
+            }
+      ]
+};
+
+    // ============================================================
+    //  RENDER CHARTS
+    // ============================================================
+    function buildChart(canvasId, seriesData, colors, yPrefix, ySuffix) {
+      const ctx = document.getElementById(canvasId);
+      new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels: seriesData.dates,
+          datasets: [
+            {
+              label: '实际值',
+              data: seriesData.actual,
+              borderColor: colors.actual,
+              backgroundColor: colors.actual,
+              borderWidth: 2.5,
+              pointRadius: (ctx) => seriesData.actual[ctx.dataIndex] !== null ? 4 : 0,
+              pointBackgroundColor: colors.actual,
+              tension: 0.3,
+              spanGaps: true
+            },
+            {
+              label: '预测值',
+              data: seriesData.predicted,
+              borderColor: colors.predicted,
+              backgroundColor: colors.predicted,
+              borderWidth: 2.5,
+              borderDash: [6, 4],
+              pointRadius: (ctx) => seriesData.predicted[ctx.dataIndex] !== null ? 5 : 0,
+              pointBackgroundColor: colors.predicted,
+              pointBorderColor: '#fff',
+              pointBorderWidth: 2,
+              tension: 0.3,
+              spanGaps: true
+            }
+          ]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          interaction: { mode: 'index', intersect: false },
+          plugins: {
+            legend: {
+              position: 'top',
+              labels: {
+                font: { family: "'PingFang SC','Microsoft YaHei',sans-serif", size: 12 },
+                usePointStyle: true, padding: 16
+              }
+            },
+            tooltip: {
+              backgroundColor: 'rgba(0,0,0,0.85)',
+              titleFont: { family: "'PingFang SC','Microsoft YaHei',sans-serif" },
+              bodyFont: { family: "'PingFang SC','Microsoft YaHei',sans-serif" },
+              padding: 12,
+              cornerRadius: 8,
+              callbacks: {
+                label: (c) => c.dataset.label + ': ' + yPrefix + c.parsed.y.toLocaleString() + ySuffix
+              }
+            },
+            annotation: {
+              annotations: {
+                divider: {
+                  type: 'line',
+                  xMin: 9.5, xMax: 9.5,
+                  borderColor: 'rgba(0,0,0,0.15)',
+                  borderWidth: 1.5,
+                  borderDash: [6, 4],
+                  label: {
+                    display: true,
+                    content: '预测 \u2192',
+                    position: 'start',
+                    backgroundColor: 'rgba(0,0,0,0.5)',
+                    color: '#fff',
+                    font: { family: "'PingFang SC','Microsoft YaHei',sans-serif", size: 10 },
+                    padding: 3
+                  }
+                }
+              }
+            }
+          },
+          scales: {
+            x: {
+              grid: { display: false },
+              ticks: { font: { size: 11 } }
+            },
+            y: {
+              beginAtZero: false,
+              ticks: {
+                callback: v => yPrefix + v.toLocaleString() + ySuffix,
+                font: { size: 11 }
+              },
+              grid: { color: 'rgba(0,0,0,0.04)' }
+            }
+          }
+        }
+      });
+    }
+
+    buildChart('lmeChart', DATA.lme,
+      { actual: '#1565C0', predicted: '#42A5F5' }, '$', '');
+
+    buildChart('shfeChart', DATA.shfe,
+      { actual: '#E65100', predicted: '#FF8A65' }, '', ' 元');
+
+    // ============================================================
+    //  RENDER TABLE
+    // ============================================================
+    function renderTable() {
+      const table = document.getElementById('forecastTable');
+      const confBadge = (v) => {
+        if (v >= 1) return `<span class="badge badge-100">${(v*100).toFixed(0)}%</span>`;
+        if (v >= 0.65) return `<span class="badge badge-high">${(v*100).toFixed(0)}%</span>`;
+        if (v >= 0.60) return `<span class="badge badge-mid">${(v*100).toFixed(0)}%</span>`;
+        return `<span class="badge badge-low">${(v*100).toFixed(0)}%</span>`;
+      };
+      const factors = (obj) => Object.entries(obj).map(([k,v]) => `<span style="color:#90A4AE;">${k}:</span> ${v}`).join('<br>');
+
+      let html = `<thead><tr>
+        <th>日期</th>
+        <th>LME ($/t)</th>
+        <th>沪铝 (元/t)</th>
+        <th>置信度</th>
+        <th>置信度因子</th>
+        <th>驱动因素</th>
+      </tr></thead><tbody>`;
+
+      DATA.daily_forecast.forEach(d => {
+        const rc = d.is_actual ? ' class="actual-row"' : '';
+        const lmeActual = d.lme.actual !== null
+          ? `<div class="val val-lme">${d.lme.actual.toLocaleString()}</div><div class="sub">实际收盘</div>`
+          : '';
+        const lmePred = d.lme.actual !== null
+          ? `<div class="sub" style="margin-top:4px;">预测: ${d.lme.predicted.toLocaleString()}</div>`
+          : `<div class="val val-lme">${d.lme.predicted.toLocaleString()}</div><div class="sub">${d.lme.low.toLocaleString()} - ${d.lme.high.toLocaleString()}</div>`;
+
+        const shfeActual = d.shfe.actual !== null
+          ? `<div class="val val-shfe">${d.shfe.actual.toLocaleString()}</div><div class="sub">SMM现货</div>`
+          : '';
+        const shfePred = d.shfe.actual !== null
+          ? `<div class="sub" style="margin-top:4px;">预测: ${d.shfe.predicted.toLocaleString()}</div>`
+          : `<div class="val val-shfe">${d.shfe.predicted.toLocaleString()}</div><div class="sub">${d.shfe.low.toLocaleString()} - ${d.shfe.high.toLocaleString()}</div>`;
+
+        html += `<tr${rc}>
+          <td>${d.date.slice(5)}<br><span class="sub">${d.weekday}</span></td>
+          <td>${lmeActual}${lmePred}</td>
+          <td>${shfeActual}${shfePred}</td>
+          <td>${confBadge(d.confidence)}</td>
+          <td style="text-align:left;font-size:11px;line-height:1.6;">${factors(d.confidence_factors)}</td>
+          <td class="driver">${d.driver}</td>
+        </tr>`;
+      });
+
+      html += '</tbody>';
+      table.innerHTML = html;
+    }
+
+    renderTable();
+
+    // ============================================================
+    //  RENDER TIMESTAMPS
+    // ============================================================
+    function fmtTime(date) {
+      return date.getFullYear() + '年' + (date.getMonth()+1) + '月' + date.getDate() + '日 '
+        + String(date.getHours()).padStart(2,'0') + ':'
+        + String(date.getMinutes()).padStart(2,'0') + ':'
+        + String(date.getSeconds()).padStart(2,'0');
+    }
+    const research = new Date(DATA.meta.updated);
+    let html = '数据调研时间: ' + fmtTime(research);
+
+    fetch('pull_time.json?' + Date.now())
+      .then(r => r.json())
+      .then(j => {
+        html += '<br>数据拉取时间: ' + j.pull_time;
+        document.getElementById('timestamps').innerHTML = html;
+      })
+      .catch(() => {
+        document.getElementById('timestamps').innerHTML = html;
+      });
+  </script>
+</body>
+</html>
