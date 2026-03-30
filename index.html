@@ -707,21 +707,39 @@
         <th>驱动因素</th>
       </tr></thead><tbody>`;
 
-      DATA.daily_forecast.forEach(d => {
+      DATA.daily_forecast.forEach((d, i) => {
         const rc = d.is_actual ? ' class="actual-row"' : '';
+
+        // 计算涨跌箭头
+        const prev = i > 0 ? DATA.daily_forecast[i - 1] : null;
+        function arrow(cur, prevVal) {
+          if (!prev || prevVal === null || cur === null) return '';
+          const diff = cur - prevVal;
+          const pct = (diff / prevVal * 100).toFixed(1);
+          if (diff > 0) return `<span style="color:#E53935;font-size:11px;font-weight:600;"> &#9650; +${pct}%</span>`;
+          if (diff < 0) return `<span style="color:#43A047;font-size:11px;font-weight:600;"> &#9660; ${pct}%</span>`;
+          return `<span style="color:#9E9E9E;font-size:11px;"> &#9644; 0%</span>`;
+        }
+        const prevLme = prev ? (prev.lme.actual !== null ? prev.lme.actual : prev.lme.predicted) : null;
+        const prevShfe = prev ? (prev.shfe.actual !== null ? prev.shfe.actual : prev.shfe.predicted) : null;
+        const curLme = d.lme.actual !== null ? d.lme.actual : d.lme.predicted;
+        const curShfe = d.shfe.actual !== null ? d.shfe.actual : d.shfe.predicted;
+        const lmeArrow = arrow(curLme, prevLme);
+        const shfeArrow = arrow(curShfe, prevShfe);
+
         const lmeActual = d.lme.actual !== null
-          ? `<div class="val val-lme">${d.lme.actual.toLocaleString()}</div><div class="sub">实际收盘</div>`
+          ? `<div class="val val-lme">${d.lme.actual.toLocaleString()}${lmeArrow}</div><div class="sub">实际收盘</div>`
           : '';
         const lmePred = d.lme.actual !== null
           ? `<div class="sub" style="margin-top:4px;">预测: ${d.lme.predicted.toLocaleString()}</div>`
-          : `<div class="val val-lme">${d.lme.predicted.toLocaleString()}</div><div class="sub">${d.lme.low.toLocaleString()} - ${d.lme.high.toLocaleString()}</div>`;
+          : `<div class="val val-lme">${d.lme.predicted.toLocaleString()}${lmeArrow}</div><div class="sub">${d.lme.low.toLocaleString()} - ${d.lme.high.toLocaleString()}</div>`;
 
         const shfeActual = d.shfe.actual !== null
-          ? `<div class="val val-shfe">${d.shfe.actual.toLocaleString()}</div><div class="sub">SMM现货</div>`
+          ? `<div class="val val-shfe">${d.shfe.actual.toLocaleString()}${shfeArrow}</div><div class="sub">SMM现货</div>`
           : '';
         const shfePred = d.shfe.actual !== null
           ? `<div class="sub" style="margin-top:4px;">预测: ${d.shfe.predicted.toLocaleString()}</div>`
-          : `<div class="val val-shfe">${d.shfe.predicted.toLocaleString()}</div><div class="sub">${d.shfe.low.toLocaleString()} - ${d.shfe.high.toLocaleString()}</div>`;
+          : `<div class="val val-shfe">${d.shfe.predicted.toLocaleString()}${shfeArrow}</div><div class="sub">${d.shfe.low.toLocaleString()} - ${d.shfe.high.toLocaleString()}</div>`;
 
         html += `<tr${rc}>
           <td>${d.date.slice(5)}<br><span class="sub">${d.weekday}</span></td>
