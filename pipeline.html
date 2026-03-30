@@ -1,0 +1,584 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>铝价数据管线 | Pipeline</title>
+<style>
+  :root {
+    --bg: #0f172a;
+    --card: #1e293b;
+    --border: #334155;
+    --blue: #3b82f6;
+    --purple: #8b5cf6;
+    --green: #10b981;
+    --orange: #f59e0b;
+    --cyan: #06b6d4;
+    --pink: #ec4899;
+    --text: #e2e8f0;
+    --text2: #94a3b8;
+    --glow-blue: rgba(59,130,246,0.3);
+    --glow-purple: rgba(139,92,246,0.3);
+    --glow-green: rgba(16,185,129,0.3);
+    --glow-orange: rgba(245,158,11,0.3);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* Background animation */
+  body::before {
+    content: '';
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background:
+      radial-gradient(ellipse at 20% 50%, rgba(59,130,246,0.08) 0%, transparent 50%),
+      radial-gradient(ellipse at 80% 20%, rgba(139,92,246,0.08) 0%, transparent 50%),
+      radial-gradient(ellipse at 50% 80%, rgba(16,185,129,0.06) 0%, transparent 50%);
+    z-index: 0;
+  }
+
+  .container {
+    position: relative;
+    z-index: 1;
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 40px 20px 60px;
+  }
+
+  /* Header */
+  .header {
+    text-align: center;
+    margin-bottom: 50px;
+  }
+
+  .header h1 {
+    font-size: 2rem;
+    font-weight: 700;
+    background: linear-gradient(135deg, var(--blue), var(--purple), var(--cyan));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 10px;
+  }
+
+  .header p {
+    color: var(--text2);
+    font-size: 0.95rem;
+  }
+
+  .badge {
+    display: inline-block;
+    padding: 3px 10px;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    margin: 8px 4px 0;
+  }
+
+  .badge-auto { background: rgba(16,185,129,0.15); color: var(--green); border: 1px solid rgba(16,185,129,0.3); }
+  .badge-live { background: rgba(239,68,68,0.15); color: #ef4444; border: 1px solid rgba(239,68,68,0.3); }
+
+  /* Pipeline */
+  .pipeline {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    position: relative;
+  }
+
+  /* Stage */
+  .stage {
+    display: flex;
+    align-items: flex-start;
+    gap: 24px;
+    position: relative;
+  }
+
+  /* Timeline */
+  .timeline {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    flex-shrink: 0;
+    width: 60px;
+  }
+
+  .timeline-dot {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.3rem;
+    flex-shrink: 0;
+    position: relative;
+    z-index: 2;
+  }
+
+  .timeline-dot.blue { background: rgba(59,130,246,0.2); border: 2px solid var(--blue); box-shadow: 0 0 20px var(--glow-blue); }
+  .timeline-dot.purple { background: rgba(139,92,246,0.2); border: 2px solid var(--purple); box-shadow: 0 0 20px var(--glow-purple); }
+  .timeline-dot.green { background: rgba(16,185,129,0.2); border: 2px solid var(--green); box-shadow: 0 0 20px var(--glow-green); }
+  .timeline-dot.orange { background: rgba(245,158,11,0.2); border: 2px solid var(--orange); box-shadow: 0 0 20px var(--glow-orange); }
+  .timeline-dot.cyan { background: rgba(6,182,212,0.2); border: 2px solid var(--cyan); box-shadow: 0 0 20px rgba(6,182,212,0.3); }
+
+  .timeline-line {
+    width: 2px;
+    flex-grow: 1;
+    min-height: 40px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .timeline-line::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(to bottom, var(--border), transparent);
+  }
+
+  .timeline-line .pulse {
+    position: absolute;
+    width: 6px;
+    height: 20px;
+    left: -2px;
+    border-radius: 3px;
+    animation: flowDown 2s infinite;
+  }
+
+  .timeline-line .pulse.blue { background: var(--blue); box-shadow: 0 0 10px var(--blue); }
+  .timeline-line .pulse.purple { background: var(--purple); box-shadow: 0 0 10px var(--purple); }
+  .timeline-line .pulse.green { background: var(--green); box-shadow: 0 0 10px var(--green); }
+  .timeline-line .pulse.orange { background: var(--orange); box-shadow: 0 0 10px var(--orange); }
+
+  @keyframes flowDown {
+    0% { top: -20px; opacity: 0; }
+    20% { opacity: 1; }
+    80% { opacity: 1; }
+    100% { top: 100%; opacity: 0; }
+  }
+
+  /* Card */
+  .stage-card {
+    flex: 1;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 24px;
+    margin-bottom: 12px;
+    transition: transform 0.3s, box-shadow 0.3s;
+  }
+
+  .stage-card:hover {
+    transform: translateY(-2px);
+  }
+
+  .stage-card.blue-glow:hover { box-shadow: 0 8px 30px var(--glow-blue); }
+  .stage-card.purple-glow:hover { box-shadow: 0 8px 30px var(--glow-purple); }
+  .stage-card.green-glow:hover { box-shadow: 0 8px 30px var(--glow-green); }
+  .stage-card.orange-glow:hover { box-shadow: 0 8px 30px var(--glow-orange); }
+  .stage-card.cyan-glow:hover { box-shadow: 0 8px 30px rgba(6,182,212,0.3); }
+
+  .stage-label {
+    font-size: 0.7rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    margin-bottom: 6px;
+  }
+
+  .stage-label.blue { color: var(--blue); }
+  .stage-label.purple { color: var(--purple); }
+  .stage-label.green { color: var(--green); }
+  .stage-label.orange { color: var(--orange); }
+  .stage-label.cyan { color: var(--cyan); }
+
+  .stage-title {
+    font-size: 1.2rem;
+    font-weight: 700;
+    margin-bottom: 8px;
+  }
+
+  .stage-desc {
+    color: var(--text2);
+    font-size: 0.88rem;
+    line-height: 1.6;
+    margin-bottom: 14px;
+  }
+
+  /* Detail items */
+  .details {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .detail-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 5px 12px;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 8px;
+    font-size: 0.78rem;
+    color: var(--text2);
+  }
+
+  .detail-item .icon { font-size: 0.9rem; }
+
+  /* Schedule badge */
+  .schedule {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 10px;
+    border-radius: 6px;
+    font-size: 0.78rem;
+    font-weight: 600;
+    font-family: "SF Mono", "Fira Code", monospace;
+  }
+
+  .schedule.blue { background: rgba(59,130,246,0.12); color: var(--blue); }
+  .schedule.purple { background: rgba(139,92,246,0.12); color: var(--purple); }
+  .schedule.green { background: rgba(16,185,129,0.12); color: var(--green); }
+  .schedule.orange { background: rgba(245,158,11,0.12); color: var(--orange); }
+
+  /* Data sources */
+  .sources {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 6px;
+    margin-top: 10px;
+  }
+
+  .source-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.8rem;
+    color: var(--text2);
+  }
+
+  .source-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  .source-dot.green { background: var(--green); }
+  .source-dot.blue { background: var(--blue); }
+  .source-dot.orange { background: var(--orange); }
+
+  /* Arrow connector */
+  .connector {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 8px 0;
+    position: relative;
+  }
+
+  .connector-arrow {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--text2);
+    font-size: 0.75rem;
+  }
+
+  .connector-arrow .line {
+    width: 40px;
+    height: 1px;
+    background: var(--border);
+  }
+
+  /* Sub-stages (two columns) */
+  .sub-stages {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    flex: 1;
+    margin-bottom: 12px;
+  }
+
+  .sub-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 20px;
+    transition: transform 0.3s, box-shadow 0.3s;
+  }
+
+  .sub-card:hover {
+    transform: translateY(-2px);
+  }
+
+  .sub-card.blue-glow:hover { box-shadow: 0 6px 24px var(--glow-blue); }
+  .sub-card.purple-glow:hover { box-shadow: 0 6px 24px var(--glow-purple); }
+
+  /* Status bar */
+  .status-bar {
+    margin-top: 40px;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 20px 28px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 16px;
+  }
+
+  .status-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.85rem;
+  }
+
+  .status-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    animation: blink 2s infinite;
+  }
+
+  .status-dot.green { background: var(--green); box-shadow: 0 0 8px var(--green); }
+  .status-dot.orange { background: var(--orange); box-shadow: 0 0 8px var(--orange); }
+
+  @keyframes blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.4; }
+  }
+
+  /* Footer */
+  .footer {
+    text-align: center;
+    margin-top: 40px;
+    color: var(--text2);
+    font-size: 0.8rem;
+  }
+
+  .footer a {
+    color: var(--blue);
+    text-decoration: none;
+  }
+
+  /* Responsive */
+  @media (max-width: 768px) {
+    .container { padding: 20px 14px 40px; }
+    .header h1 { font-size: 1.5rem; }
+    .sub-stages { grid-template-columns: 1fr; }
+    .timeline { width: 44px; }
+    .timeline-dot { width: 38px; height: 38px; font-size: 1.1rem; }
+    .stage-card { padding: 18px; }
+    .status-bar { flex-direction: column; align-items: flex-start; }
+    .sources { grid-template-columns: 1fr; }
+  }
+
+  /* Animations on scroll */
+  .stage { opacity: 0; transform: translateY(20px); animation: fadeUp 0.6s forwards; }
+  .stage:nth-child(1) { animation-delay: 0.1s; }
+  .stage:nth-child(2) { animation-delay: 0.2s; }
+  .stage:nth-child(3) { animation-delay: 0.3s; }
+  .stage:nth-child(4) { animation-delay: 0.4s; }
+  .stage:nth-child(5) { animation-delay: 0.5s; }
+  .stage:nth-child(6) { animation-delay: 0.6s; }
+  .stage:nth-child(7) { animation-delay: 0.7s; }
+
+  @keyframes fadeUp {
+    to { opacity: 1; transform: translateY(0); }
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+
+  <!-- Header -->
+  <div class="header">
+    <h1>铝价数据自动化管线</h1>
+    <p>Aluminum Price Data Pipeline</p>
+    <div>
+      <span class="badge badge-auto">&#9679; 全自动运行</span>
+      <span class="badge badge-live">&#9679; LIVE</span>
+    </div>
+  </div>
+
+  <!-- Pipeline -->
+  <div class="pipeline">
+
+    <!-- Stage 1: Claude Agent (两个子任务) -->
+    <div class="stage">
+      <div class="timeline">
+        <div class="timeline-dot blue">&#129302;</div>
+        <div class="timeline-line"><div class="pulse blue" style="animation-delay:0s"></div></div>
+      </div>
+      <div style="flex:1">
+        <div class="sub-stages">
+          <!-- 下午场 -->
+          <div class="sub-card blue-glow">
+            <div class="stage-label blue">STAGE 1A &middot; DATA COLLECTION</div>
+            <div class="stage-title">&#9728;&#65039; 下午场调研</div>
+            <div class="stage-desc">Claude AI 自动搜索国内市场收盘数据，交叉验证多个数据源后更新报告。</div>
+            <div class="schedule blue">&#128339; 每个交易日 16:30 (北京时间)</div>
+            <div class="sources">
+              <div class="source-item"><span class="source-dot green"></span>沪铝主力合约</div>
+              <div class="source-item"><span class="source-dot green"></span>SMM A00 现货</div>
+              <div class="source-item"><span class="source-dot green"></span>长江有色铝价</div>
+              <div class="source-item"><span class="source-dot blue"></span>LME (最新可用)</div>
+              <div class="source-item"><span class="source-dot orange"></span>美元指数 DXY</div>
+              <div class="source-item"><span class="source-dot orange"></span>市场事件扫描</div>
+            </div>
+          </div>
+          <!-- 夜间场 -->
+          <div class="sub-card purple-glow">
+            <div class="stage-label purple">STAGE 1B &middot; DATA COLLECTION</div>
+            <div class="stage-title">&#127769; 夜间场调研</div>
+            <div class="stage-desc">Claude AI 采集 LME 官方结算价和国际市场夜间动态，补全当日完整数据。</div>
+            <div class="schedule purple">&#128339; 每个交易日 01:30 (北京时间)</div>
+            <div class="sources">
+              <div class="source-item"><span class="source-dot green"></span>LME 官方结算价</div>
+              <div class="source-item"><span class="source-dot green"></span>COMEX 铝期货</div>
+              <div class="source-item"><span class="source-dot blue"></span>DXY 收盘价</div>
+              <div class="source-item"><span class="source-dot orange"></span>国际市场动态</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Stage 2: AI Analysis -->
+    <div class="stage">
+      <div class="timeline">
+        <div class="timeline-dot purple">&#129504;</div>
+        <div class="timeline-line"><div class="pulse purple" style="animation-delay:0.5s"></div></div>
+      </div>
+      <div class="stage-card purple-glow">
+        <div class="stage-label purple">STAGE 2 &middot; AI ANALYSIS</div>
+        <div class="stage-title">智能分析与预测</div>
+        <div class="stage-desc">交叉验证采集数据，计算预测偏差，超过 3% 自动校准后续预测值。滚动维护未来 10 个交易日预测窗口。</div>
+        <div class="details">
+          <div class="detail-item"><span class="icon">&#128269;</span>多源交叉验证</div>
+          <div class="detail-item"><span class="icon">&#128200;</span>偏差自动校准</div>
+          <div class="detail-item"><span class="icon">&#128197;</span>滚动预测窗口</div>
+          <div class="detail-item"><span class="icon">&#128202;</span>置信度评估</div>
+          <div class="detail-item"><span class="icon">&#9888;&#65039;</span>异常值过滤</div>
+          <div class="detail-item"><span class="icon">&#128196;</span>趋势外推</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Stage 3: Git Push -->
+    <div class="stage">
+      <div class="timeline">
+        <div class="timeline-dot green">&#128640;</div>
+        <div class="timeline-line"><div class="pulse green" style="animation-delay:1s"></div></div>
+      </div>
+      <div class="stage-card green-glow">
+        <div class="stage-label green">STAGE 3 &middot; VERSION CONTROL</div>
+        <div class="stage-title">推送至 GitHub</div>
+        <div class="stage-desc">更新后的 index.html 自动提交并推送至 GitHub 远程仓库，每次更新生成带摘要的 commit 信息。</div>
+        <div class="details">
+          <div class="detail-item"><span class="icon">&#128230;</span>github.com/heyqiang/lv</div>
+          <div class="detail-item"><span class="icon">&#128274;</span>main 分支</div>
+          <div class="detail-item"><span class="icon">&#128221;</span>自动 commit message</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Stage 4: Server Pull -->
+    <div class="stage">
+      <div class="timeline">
+        <div class="timeline-dot orange">&#128421;</div>
+        <div class="timeline-line"><div class="pulse orange" style="animation-delay:1.5s"></div></div>
+      </div>
+      <div class="stage-card orange-glow">
+        <div class="stage-label orange">STAGE 4 &middot; DEPLOYMENT</div>
+        <div class="stage-title">服务器自动拉取</div>
+        <div class="stage-desc">宝塔面板定时任务每 30 分钟从 GitHub 拉取最新代码，自动部署至生产环境。</div>
+        <div class="details">
+          <div class="detail-item"><span class="icon">&#9200;</span>每 30 分钟同步</div>
+          <div class="detail-item"><span class="icon">&#127981;</span>阿里云 ECS</div>
+          <div class="detail-item"><span class="icon">&#128736;</span>宝塔面板 cron</div>
+          <div class="detail-item"><span class="icon">&#128338;</span>记录拉取时间</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Stage 5: Live -->
+    <div class="stage">
+      <div class="timeline">
+        <div class="timeline-dot cyan">&#127760;</div>
+      </div>
+      <div class="stage-card cyan-glow">
+        <div class="stage-label cyan">STAGE 5 &middot; LIVE</div>
+        <div class="stage-title">在线报告</div>
+        <div class="stage-desc">用户访问网站即可查看最新铝价预测报告，包含交互式图表、每日预测详表和置信度评估。</div>
+        <div class="details">
+          <div class="detail-item"><span class="icon">&#127760;</span>lv.gushibox.com</div>
+          <div class="detail-item"><span class="icon">&#128200;</span>交互式图表</div>
+          <div class="detail-item"><span class="icon">&#128197;</span>10日滚动预测</div>
+          <div class="detail-item"><span class="icon">&#128241;</span>响应式布局</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Status Bar -->
+  <div class="status-bar">
+    <div class="status-item">
+      <span class="status-dot green"></span>
+      <span>下午场 &mdash; 下次: 明日 16:30</span>
+    </div>
+    <div class="status-item">
+      <span class="status-dot green"></span>
+      <span>夜间场 &mdash; 下次: 今晚 01:30</span>
+    </div>
+    <div class="status-item">
+      <span class="status-dot green"></span>
+      <span>服务器同步 &mdash; 每 30 分钟</span>
+    </div>
+    <div class="status-item" id="status-time">
+      <span class="status-dot orange"></span>
+      <span>加载中...</span>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <div class="footer">
+    <p>Powered by Claude AI &middot; <a href="/">查看铝价报告</a></p>
+  </div>
+
+</div>
+
+<script>
+function updateTime() {
+  const now = new Date();
+  const bjt = new Date(now.getTime() + (8 - (-now.getTimezoneOffset() / 60)) * 3600000);
+  const h = String(bjt.getHours()).padStart(2, '0');
+  const m = String(bjt.getMinutes()).padStart(2, '0');
+  const s = String(bjt.getSeconds()).padStart(2, '0');
+  document.querySelector('#status-time span:last-child').textContent =
+    `北京时间 ${h}:${m}:${s}`;
+}
+updateTime();
+setInterval(updateTime, 1000);
+</script>
+
+</body>
+</html>
