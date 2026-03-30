@@ -104,7 +104,8 @@
   <div class="header">
     <div class="container">
       <h1>铝价预测周报</h1>
-      <div class="subtitle">2026年3月30日 - 4月3日 | 北京时间 | 数据更新至3月30日收盘</div>
+      <div class="subtitle">2026年3月30日 - 4月13日（未来10个交易日） | 北京时间</div>
+      <div id="timestamps" style="margin-top:6px; font-size:12px; opacity:0.5; line-height:1.8;"></div>
     </div>
   </div>
 
@@ -138,98 +139,425 @@
     // ============================================================
     const DATA = {
       "meta": {
-        "title": "铝价预测周报",
-        "period": "2026-03-30 ~ 2026-04-03",
-        "timezone": "Asia/Shanghai",
-        "updated": "2026-03-30T18:00:00+08:00"
+            "title": "铝价预测周报",
+            "period": "2026-03-30 ~ 2026-04-13",
+            "timezone": "Asia/Shanghai",
+            "updated": "2026-03-30T15:27:41+08:00"
       },
       "lme": {
-        "unit": "美元/吨",
-        "dates":     ["3/16","3/17","3/18","3/19","3/20","3/23","3/24","3/25","3/26","3/27","3/30","3/31","4/1","4/2","4/3"],
-        "actual":    [3250,  3270,  3310,  3340,  3192,  3240,  3265,  3280,  3350,  3284.5,3452.85,null, null, null, null],
-        "predicted": [null,  null,  null,  null,  null,  null,  null,  null,  null,  null,  3452.85, 3470, 3440, 3420, 3400]
+            "unit": "美元/吨",
+            "dates": [
+                  "3/16",
+                  "3/17",
+                  "3/18",
+                  "3/19",
+                  "3/20",
+                  "3/23",
+                  "3/24",
+                  "3/25",
+                  "3/26",
+                  "3/27",
+                  "3/30",
+                  "3/31",
+                  "4/1",
+                  "4/2",
+                  "4/3",
+                  "4/6",
+                  "4/7",
+                  "4/8",
+                  "4/9",
+                  "4/10",
+                  "4/13"
+            ],
+            "actual": [
+                  3250,
+                  3270,
+                  3310,
+                  3340,
+                  3192,
+                  3240,
+                  3265,
+                  3280,
+                  3350,
+                  3284.5,
+                  3340.5,
+                  null,
+                  null,
+                  null,
+                  null,
+                  null,
+                  null,
+                  null,
+                  null,
+                  null,
+                  null
+            ],
+            "predicted": [
+                  null,
+                  null,
+                  null,
+                  null,
+                  null,
+                  null,
+                  null,
+                  null,
+                  null,
+                  null,
+                  3340.5,
+                  3470,
+                  3440,
+                  3420,
+                  3400,
+                  3385,
+                  3370,
+                  3360,
+                  3350,
+                  3345,
+                  3340
+            ]
       },
       "shfe": {
-        "unit": "元/吨",
-        "dates":     ["3/16","3/17","3/18","3/19","3/20","3/23","3/24","3/25","3/26","3/27","3/30","3/31","4/1","4/2","4/3"],
-        "actual":    [23500, 23550, 23700, 23800, 23400, 23550, 23810, 23750, 23900, 23795, 24530, null,  null, null, null],
-        "predicted": [null,  null,  null,  null,  null,  null,  null,  null,  null,  null,  24530, 24650, 24500,24400,24320]
+            "unit": "元/吨",
+            "dates": [
+                  "3/16",
+                  "3/17",
+                  "3/18",
+                  "3/19",
+                  "3/20",
+                  "3/23",
+                  "3/24",
+                  "3/25",
+                  "3/26",
+                  "3/27",
+                  "3/30",
+                  "3/31",
+                  "4/1",
+                  "4/2",
+                  "4/3",
+                  "4/6",
+                  "4/7",
+                  "4/8",
+                  "4/9",
+                  "4/10",
+                  "4/13"
+            ],
+            "actual": [
+                  23500,
+                  23550,
+                  23700,
+                  23800,
+                  23400,
+                  23550,
+                  23810,
+                  23750,
+                  23900,
+                  23795,
+                  23935.0,
+                  null,
+                  null,
+                  null,
+                  null,
+                  null,
+                  null,
+                  null,
+                  null,
+                  null,
+                  null
+            ],
+            "predicted": [
+                  null,
+                  null,
+                  null,
+                  null,
+                  null,
+                  null,
+                  null,
+                  null,
+                  null,
+                  null,
+                  23935.0,
+                  24650,
+                  24500,
+                  24400,
+                  24320,
+                  24250,
+                  24200,
+                  24160,
+                  24120,
+                  24090,
+                  24060
+            ]
       },
       "daily_forecast": [
-        {
-          "date": "2026-03-30",
-          "weekday": "周一",
-          "is_actual": true,
-          "lme":  { "predicted": 3295,  "actual": 3452.85, "low": 3260,  "high": 3330 },
-          "shfe": { "predicted": 23850, "actual": 24530,   "low": 23700, "high": 24000 },
-          "confidence": 1.00,
-          "confidence_factors": {
-            "data_status": "已收盘",
-            "source": "LME官方结算 / SMM现货A00",
-            "deviation_lme": "+4.80%",
-            "deviation_shfe": "+2.85%"
-          },
-          "driver": "中东地缘冲突急剧升级，供应冲击恐慌推动铝价单日暴涨"
-        },
-        {
-          "date": "2026-03-31",
-          "weekday": "周二",
-          "is_actual": false,
-          "lme":  { "predicted": 3470,  "actual": null, "low": 3410,  "high": 3530 },
-          "shfe": { "predicted": 24650, "actual": null, "low": 24400, "high": 24900 },
-          "confidence": 0.55,
-          "confidence_factors": {
-            "macro_event": "中国3月PMI发布",
-            "geopolitical": "中东局势不确定性极高",
-            "technical": "前日暴涨后波动率放大",
-            "momentum": "短期强势惯性"
-          },
-          "driver": "中国3月PMI发布，叠加前日暴涨惯性；若PMI>50可能进一步冲高"
-        },
-        {
-          "date": "2026-04-01",
-          "weekday": "周三",
-          "is_actual": false,
-          "lme":  { "predicted": 3440,  "actual": null, "low": 3380,  "high": 3510 },
-          "shfe": { "predicted": 24500, "actual": null, "low": 24250, "high": 24750 },
-          "confidence": 0.60,
-          "confidence_factors": {
-            "technical": "急涨后技术性回调压力",
-            "profit_taking": "短线多头获利了结",
-            "supply": "供应紧张格局限制跌幅"
-          },
-          "driver": "急涨后技术性回调压力显现；供应紧张格局限制下行空间"
-        },
-        {
-          "date": "2026-04-02",
-          "weekday": "周四",
-          "is_actual": false,
-          "lme":  { "predicted": 3420,  "actual": null, "low": 3360,  "high": 3480 },
-          "shfe": { "predicted": 24400, "actual": null, "low": 24150, "high": 24650 },
-          "confidence": 0.65,
-          "confidence_factors": {
-            "pattern": "高位震荡盘整",
-            "usd": "美元走势成为短期变量",
-            "geopolitical": "关注中东最新进展"
-          },
-          "driver": "高位震荡盘整；市场消化地缘溢价，关注中东局势最新进展"
-        },
-        {
-          "date": "2026-04-03",
-          "weekday": "周五",
-          "is_actual": false,
-          "lme":  { "predicted": 3400,  "actual": null, "low": 3330,  "high": 3470 },
-          "shfe": { "predicted": 24320, "actual": null, "low": 24050, "high": 24580 },
-          "confidence": 0.60,
-          "confidence_factors": {
-            "weekend_effect": "多头周末前减仓避险",
-            "profit_taking": "累计涨幅较大引发获利抛压",
-            "support": "基本面偏紧限制深跌"
-          },
-          "driver": "周末前部分多头减仓避险；价格较周初高点小幅回落但仍维持高位"
-        }
+            {
+                  "date": "2026-03-30",
+                  "weekday": "周一",
+                  "is_actual": true,
+                  "lme": {
+                        "predicted": 3295,
+                        "actual": 3340.5,
+                        "low": 3260,
+                        "high": 3330
+                  },
+                  "shfe": {
+                        "predicted": 23850,
+                        "actual": 23935.0,
+                        "low": 23700,
+                        "high": 24000
+                  },
+                  "confidence": 1.0,
+                  "confidence_factors": {
+                        "data_status": "已收盘",
+                        "source": "yfinance/COMEX ALI=F, akshare/SHFE主力合约(Sina), yfinance/DX-Y.NYB",
+                        "deviation_lme": "+1.38%",
+                        "deviation_shfe": "+0.36%",
+                        "warnings": "SHFE仅单源验证"
+                  },
+                  "driver": "中东地缘冲突急剧升级，供应冲击恐慌推动铝价单日暴涨"
+            },
+            {
+                  "date": "2026-03-31",
+                  "weekday": "周二",
+                  "is_actual": false,
+                  "lme": {
+                        "predicted": 3470,
+                        "actual": null,
+                        "low": 3410,
+                        "high": 3530
+                  },
+                  "shfe": {
+                        "predicted": 24650,
+                        "actual": null,
+                        "low": 24400,
+                        "high": 24900
+                  },
+                  "confidence": 0.55,
+                  "confidence_factors": {
+                        "macro_event": "中国3月PMI发布",
+                        "geopolitical": "中东局势不确定性极高",
+                        "technical": "前日暴涨后波动率放大",
+                        "momentum": "短期强势惯性"
+                  },
+                  "driver": "中国3月PMI发布，叠加前日暴涨惯性；若PMI>50可能进一步冲高"
+            },
+            {
+                  "date": "2026-04-01",
+                  "weekday": "周三",
+                  "is_actual": false,
+                  "lme": {
+                        "predicted": 3440,
+                        "actual": null,
+                        "low": 3380,
+                        "high": 3510
+                  },
+                  "shfe": {
+                        "predicted": 24500,
+                        "actual": null,
+                        "low": 24250,
+                        "high": 24750
+                  },
+                  "confidence": 0.6,
+                  "confidence_factors": {
+                        "technical": "急涨后技术性回调压力",
+                        "profit_taking": "短线多头获利了结",
+                        "supply": "供应紧张格局限制跌幅"
+                  },
+                  "driver": "急涨后技术性回调压力显现；供应紧张格局限制下行空间"
+            },
+            {
+                  "date": "2026-04-02",
+                  "weekday": "周四",
+                  "is_actual": false,
+                  "lme": {
+                        "predicted": 3420,
+                        "actual": null,
+                        "low": 3360,
+                        "high": 3480
+                  },
+                  "shfe": {
+                        "predicted": 24400,
+                        "actual": null,
+                        "low": 24150,
+                        "high": 24650
+                  },
+                  "confidence": 0.65,
+                  "confidence_factors": {
+                        "pattern": "高位震荡盘整",
+                        "usd": "美元走势成为短期变量",
+                        "geopolitical": "关注中东最新进展"
+                  },
+                  "driver": "高位震荡盘整；市场消化地缘溢价，关注中东局势最新进展"
+            },
+            {
+                  "date": "2026-04-03",
+                  "weekday": "周五",
+                  "is_actual": false,
+                  "lme": {
+                        "predicted": 3400,
+                        "actual": null,
+                        "low": 3330,
+                        "high": 3470
+                  },
+                  "shfe": {
+                        "predicted": 24320,
+                        "actual": null,
+                        "low": 24050,
+                        "high": 24580
+                  },
+                  "confidence": 0.6,
+                  "confidence_factors": {
+                        "weekend_effect": "多头周末前减仓避险",
+                        "profit_taking": "累计涨幅较大引发获利抛压",
+                        "support": "基本面偏紧限制深跌"
+                  },
+                  "driver": "周末前部分多头减仓避险；价格较周初高点小幅回落但仍维持高位"
+            },
+            {
+                  "date": "2026-04-06",
+                  "weekday": "周一",
+                  "is_actual": false,
+                  "lme": {
+                        "predicted": 3385,
+                        "actual": null,
+                        "low": 3320,
+                        "high": 3450
+                  },
+                  "shfe": {
+                        "predicted": 24250,
+                        "actual": null,
+                        "low": 23980,
+                        "high": 24520
+                  },
+                  "confidence": 0.55,
+                  "confidence_factors": {
+                        "holiday_risk": "临近清明节，注意休市安排",
+                        "consolidation": "第二周高位盘整延续",
+                        "geopolitical": "中东局势演变仍是核心变量"
+                  },
+                  "driver": "新一周开盘，延续高位盘整；清明节前后交投可能趋于清淡"
+            },
+            {
+                  "date": "2026-04-07",
+                  "weekday": "周二",
+                  "is_actual": false,
+                  "lme": {
+                        "predicted": 3370,
+                        "actual": null,
+                        "low": 3305,
+                        "high": 3435
+                  },
+                  "shfe": {
+                        "predicted": 24200,
+                        "actual": null,
+                        "low": 23930,
+                        "high": 24470
+                  },
+                  "confidence": 0.5,
+                  "confidence_factors": {
+                        "time_decay": "远期预测不确定性增大",
+                        "mean_reversion": "均值回归压力渐显",
+                        "demand": "下游消费数据待验证"
+                  },
+                  "driver": "地缘溢价逐步消化，市场关注实际消费能否支撑高位价格"
+            },
+            {
+                  "date": "2026-04-08",
+                  "weekday": "周三",
+                  "is_actual": false,
+                  "lme": {
+                        "predicted": 3360,
+                        "actual": null,
+                        "low": 3290,
+                        "high": 3425
+                  },
+                  "shfe": {
+                        "predicted": 24160,
+                        "actual": null,
+                        "low": 23890,
+                        "high": 24430
+                  },
+                  "confidence": 0.5,
+                  "confidence_factors": {
+                        "time_decay": "远期预测不确定性高",
+                        "inventory": "关注LME库存周度变化",
+                        "energy": "能源成本走向影响冶炼端"
+                  },
+                  "driver": "关注LME库存周报数据；能源成本变化影响冶炼成本支撑"
+            },
+            {
+                  "date": "2026-04-09",
+                  "weekday": "周四",
+                  "is_actual": false,
+                  "lme": {
+                        "predicted": 3350,
+                        "actual": null,
+                        "low": 3280,
+                        "high": 3415
+                  },
+                  "shfe": {
+                        "predicted": 24120,
+                        "actual": null,
+                        "low": 23850,
+                        "high": 24390
+                  },
+                  "confidence": 0.45,
+                  "confidence_factors": {
+                        "time_decay": "第二周末段预测可靠性降低",
+                        "macro": "美联储官员讲话或影响美元走势",
+                        "supply": "中东供应恢复进度是关键"
+                  },
+                  "driver": "价格逐步寻找新均衡位；中东供应恢复预期与实际消费博弈"
+            },
+            {
+                  "date": "2026-04-10",
+                  "weekday": "周五",
+                  "is_actual": false,
+                  "lme": {
+                        "predicted": 3345,
+                        "actual": null,
+                        "low": 3275,
+                        "high": 3410
+                  },
+                  "shfe": {
+                        "predicted": 24090,
+                        "actual": null,
+                        "low": 23820,
+                        "high": 24360
+                  },
+                  "confidence": 0.45,
+                  "confidence_factors": {
+                        "time_decay": "远期预测置信度较低",
+                        "weekend_effect": "周末避险减仓",
+                        "trend": "两周累计回调趋势"
+                  },
+                  "driver": "两周预测终点；预计较3/30高点回调约2-3%，进入新价格中枢"
+            },
+            {
+                  "date": "2026-04-13",
+                  "weekday": "周一",
+                  "is_actual": false,
+                  "lme": {
+                        "predicted": 3340,
+                        "actual": null,
+                        "low": 3270,
+                        "high": 3405
+                  },
+                  "shfe": {
+                        "predicted": 24060,
+                        "actual": null,
+                        "low": 23790,
+                        "high": 24330
+                  },
+                  "confidence": 0.4,
+                  "confidence_factors": {
+                        "time_decay": "最远期预测，仅供参考",
+                        "uncertainty": "两周后市场可能出现新催化剂",
+                        "baseline": "基于当前信息的基准外推"
+                  },
+                  "driver": "第三周开盘；预测仅为基于当前趋势的基准外推，实际受新信息驱动"
+            }
       ]
-    };
+};
 
     // ============================================================
     //  RENDER CHARTS
@@ -388,6 +716,28 @@
     }
 
     renderTable();
+
+    // ============================================================
+    //  RENDER TIMESTAMPS
+    // ============================================================
+    function fmtTime(date) {
+      return date.getFullYear() + '年' + (date.getMonth()+1) + '月' + date.getDate() + '日 '
+        + String(date.getHours()).padStart(2,'0') + ':'
+        + String(date.getMinutes()).padStart(2,'0') + ':'
+        + String(date.getSeconds()).padStart(2,'0');
+    }
+    const research = new Date(DATA.meta.updated);
+    let html = '数据调研时间: ' + fmtTime(research);
+
+    fetch('pull_time.json?' + Date.now())
+      .then(r => r.json())
+      .then(j => {
+        html += '<br>数据拉取时间: ' + j.pull_time;
+        document.getElementById('timestamps').innerHTML = html;
+      })
+      .catch(() => {
+        document.getElementById('timestamps').innerHTML = html;
+      });
   </script>
 </body>
 </html>
