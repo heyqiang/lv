@@ -3,3 +3,4 @@ update.log
 collect.log
 latest_raw.json
 __pycache__/
+.DS_Store
