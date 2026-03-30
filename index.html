@@ -96,6 +96,7 @@
       .chart-row { grid-template-columns: 1fr; }
       .chart-box { height: 300px; }
       table { font-size: 12px; }
+      .log-grid { grid-template-columns: 1fr !important; }
     }
   </style>
 </head>
@@ -129,6 +130,26 @@
       <div class="section-title">三、每日价格预测详表</div>
       <div style="overflow-x: auto;">
         <table id="forecastTable"></table>
+      </div>
+    </div>
+
+    <!-- Module 3: Logs -->
+    <div class="log-grid" style="display:grid; grid-template-columns:1fr 1fr; gap:24px; margin-top:24px;">
+      <div class="section" style="margin-top:0;">
+        <div class="section-title" style="cursor:pointer;" onclick="document.getElementById('researchLog').style.display=document.getElementById('researchLog').style.display==='none'?'block':'none'">
+          四、调研更新日志 <span style="font-size:12px;color:#9E9E9E;font-weight:400;">&#9660; 点击展开/收起</span>
+        </div>
+        <div id="researchLog" style="max-height:360px;overflow-y:auto;">
+          <div style="text-align:center;color:#9E9E9E;font-size:13px;padding:20px;">加载中...</div>
+        </div>
+      </div>
+      <div class="section" style="margin-top:0;">
+        <div class="section-title" style="cursor:pointer;" onclick="document.getElementById('pullLog').style.display=document.getElementById('pullLog').style.display==='none'?'block':'none'">
+          五、服务器同步日志 <span style="font-size:12px;color:#9E9E9E;font-weight:400;">&#9660; 点击展开/收起</span>
+        </div>
+        <div id="pullLog" style="max-height:360px;overflow-y:auto;">
+          <div style="text-align:center;color:#9E9E9E;font-size:13px;padding:20px;">加载中...</div>
+        </div>
       </div>
     </div>
 
@@ -738,6 +759,66 @@
       })
       .catch(() => {
         document.getElementById('timestamps').innerHTML = html;
+      });
+
+    // ============================================================
+    //  调研更新日志 (GitHub Commits API)
+    // ============================================================
+    fetch('https://api.github.com/repos/heyqiang/lv/commits?per_page=15&path=index.html')
+      .then(r => r.json())
+      .then(commits => {
+        if (!Array.isArray(commits) || commits.length === 0) {
+          document.getElementById('researchLog').innerHTML = '<div style="color:#9E9E9E;font-size:13px;padding:10px;">暂无记录</div>';
+          return;
+        }
+        let h = '<div style="font-size:12px;">';
+        commits.forEach(c => {
+          const d = new Date(c.commit.author.date);
+          const t = d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')+' '+String(d.getHours()).padStart(2,'0')+':'+String(d.getMinutes()).padStart(2,'0');
+          const msg = c.commit.message.split('\n')[0];
+          const sha = c.sha.slice(0,7);
+          const isResearch = /更新|update|调研/i.test(msg);
+          h += '<div style="padding:8px 10px;border-bottom:1px solid #F0F0F0;display:flex;align-items:flex-start;gap:10px;">';
+          h += '<div style="flex-shrink:0;width:6px;height:6px;border-radius:50%;margin-top:6px;background:'+(isResearch?'#1565C0':'#BDBDBD')+'"></div>';
+          h += '<div style="flex:1;min-width:0;">';
+          h += '<div style="color:#212121;word-break:break-word;">'+msg+'</div>';
+          h += '<div style="color:#9E9E9E;font-size:11px;margin-top:2px;">'+t+' &middot; <a href="https://github.com/heyqiang/lv/commit/'+c.sha+'" target="_blank" style="color:#90CAF9;text-decoration:none;">'+sha+'</a></div>';
+          h += '</div></div>';
+        });
+        h += '</div>';
+        document.getElementById('researchLog').innerHTML = h;
+      })
+      .catch(() => {
+        document.getElementById('researchLog').innerHTML = '<div style="color:#9E9E9E;font-size:13px;padding:10px;">加载失败</div>';
+      });
+
+    // ============================================================
+    //  服务器同步日志 (sync_log.txt)
+    // ============================================================
+    fetch('sync_log.txt?' + Date.now())
+      .then(r => { if(!r.ok) throw ''; return r.text(); })
+      .then(txt => {
+        const lines = txt.trim().split('\n').filter(l => l.trim()).reverse();
+        if (lines.length === 0) {
+          document.getElementById('pullLog').innerHTML = '<div style="color:#9E9E9E;font-size:13px;padding:10px;">暂无记录</div>';
+          return;
+        }
+        let h = '<div style="font-size:12px;">';
+        lines.forEach(line => {
+          const parts = line.split(' | ');
+          const time = parts[0] || '';
+          const info = parts.slice(1).join(' | ') || 'git pull';
+          const ok = /up-to-date|complete|success|ok/i.test(info) || !/error|fail/i.test(info);
+          h += '<div style="padding:8px 10px;border-bottom:1px solid #F0F0F0;display:flex;align-items:center;gap:10px;">';
+          h += '<div style="flex-shrink:0;width:6px;height:6px;border-radius:50%;background:'+(ok?'#4CAF50':'#F44336')+'"></div>';
+          h += '<div style="flex:1;"><span style="color:#212121;">'+time+'</span> <span style="color:#9E9E9E;font-size:11px;margin-left:6px;">'+info+'</span></div>';
+          h += '</div>';
+        });
+        h += '</div>';
+        document.getElementById('pullLog').innerHTML = h;
+      })
+      .catch(() => {
+        document.getElementById('pullLog').innerHTML = '<div style="color:#9E9E9E;font-size:13px;padding:10px;">暂无同步日志</div>';
       });
   </script>
 </body>
