@@ -17,7 +17,7 @@ from datetime import datetime, timezone, timedelta
 #  配置
 # ============================================================
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-HTML_FILE = os.path.join(BASE_DIR, "aluminum_forecast_2026w14.html")
+HTML_FILE = os.path.join(BASE_DIR, "index.html")
 LOG_FILE = os.path.join(BASE_DIR, "collect.log")
 PULL_TIME_FILE = os.path.join(BASE_DIR, "pull_time.json")
 
