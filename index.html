@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>铝价预测周报 | 2026年3月30日-4月13日</title>
+  <title>铝价预测周报 | 2026年3月30日-4月16日</title>
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0"></script>
   <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-annotation@3.0.1"></script>
   <style>
@@ -105,7 +105,7 @@
   <div class="header">
     <div class="container">
       <h1>铝价预测周报</h1>
-      <div class="subtitle">2026年3月30日 - 4月13日（未来10个交易日） | 北京时间</div>
+      <div class="subtitle">2026年3月30日 - 4月16日（未来10个交易日） | 北京时间</div>
       <div id="timestamps" style="margin-top:6px; font-size:12px; opacity:0.5; line-height:1.8;"></div>
       <a href="pipeline.html" style="display:inline-block;margin-top:10px;padding:4px 14px;font-size:12px;color:rgba(255,255,255,.7);border:1px solid rgba(255,255,255,.2);border-radius:20px;text-decoration:none;transition:all .2s;" onmouseover="this.style.color='#fff';this.style.borderColor='rgba(255,255,255,.5)'" onmouseout="this.style.color='rgba(255,255,255,.7)';this.style.borderColor='rgba(255,255,255,.2)'">&#9881; 查看数据管线流程</a>
     </div>
@@ -162,9 +162,9 @@
     const DATA = {
       "meta": {
             "title": "铝价预测周报",
-            "period": "2026-03-30 ~ 2026-04-15",
+            "period": "2026-03-30 ~ 2026-04-16",
             "timezone": "Asia/Shanghai",
-            "updated": "2026-04-01T16:31:00+08:00"
+            "updated": "2026-04-02T16:31:00+08:00"
       },
       "lme": {
             "unit": "美元/吨",
@@ -191,7 +191,8 @@
                   "4/10",
                   "4/13",
                   "4/14",
-                  "4/15"
+                  "4/15",
+                  "4/16"
             ],
             "actual": [
                   3250,
@@ -206,7 +207,8 @@
                   3284.5,
                   3381,
                   3585,
-                  null,
+                  3583.5,
+                  3583.5,
                   null,
                   null,
                   null,
@@ -231,8 +233,8 @@
                   null,
                   3381,
                   3585,
-                  3554,
-                  3533,
+                  3583.5,
+                  3583.5,
                   3513,
                   3497,
                   3482,
@@ -241,7 +243,8 @@
                   3456,
                   3451,
                   3446,
-                  3441
+                  3441,
+                  3436
             ]
       },
       "shfe": {
@@ -269,7 +272,8 @@
                   "4/10",
                   "4/13",
                   "4/14",
-                  "4/15"
+                  "4/15",
+                  "4/16"
             ],
             "actual": [
                   23500,
@@ -285,6 +289,7 @@
                   23935.0,
                   24690,
                   24760,
+                  24740,
                   null,
                   null,
                   null,
@@ -310,7 +315,7 @@
                   23935.0,
                   24690,
                   24760,
-                  24400,
+                  24740,
                   24320,
                   24250,
                   24200,
@@ -319,7 +324,8 @@
                   24090,
                   24060,
                   24030,
-                  24000
+                  24000,
+                  23970
             ]
       },
       "daily_forecast": [
@@ -381,7 +387,7 @@
                   "is_actual": true,
                   "lme": {
                         "predicted": 3554,
-                        "actual": null,
+                        "actual": 3583.5,
                         "low": 3492,
                         "high": 3626
                   },
@@ -393,36 +399,37 @@
                   },
                   "confidence": 1.00,
                   "confidence_factors": {
-                        "data_status": "SHFE已收盘，LME Ring尚未结算",
-                        "source": "东方财富/WorthWill: SHFE主力¥24,760; 长江有色A00¥24,600; LME 3月期货电子盘$3,436; DXY≈99.82",
-                        "deviation_shfe": "+1.06%",
-                        "note": "LME 4/1官方结算待Ring交易(18:40北京时间)后更新"
+                        "data_status": "SHFE已收盘，LME官方结算已确认",
+                        "source": "ZAMAK/Westmetall: LME Cash Official $3,583.5; SHFE主力¥24,760; 长江有色A00¥24,600; DXY≈99.82",
+                        "deviation_lme": "+0.83%",
+                        "deviation_shfe": "+1.06%"
                   },
-                  "driver": "中东供应冲击延续，沪铝高位震荡小幅收涨至¥24,760(+0.28%)；LME Ring尚未开盘，3月期货电子盘$3,436(-$9)；DXY≈99.82美元弱势续撑铝价；SMM维持偏多思路"
+                  "driver": "中东供应冲击延续，LME现货$3,583.5高位持稳；沪铝高位震荡小幅收涨至¥24,760(+0.28%)；DXY≈99.82美元弱势续撑铝价"
             },
             {
                   "date": "2026-04-02",
                   "weekday": "周四",
-                  "is_actual": false,
+                  "is_actual": true,
                   "lme": {
                         "predicted": 3533,
-                        "actual": null,
+                        "actual": 3583.5,
                         "low": 3471,
                         "high": 3595
                   },
                   "shfe": {
                         "predicted": 24400,
-                        "actual": null,
+                        "actual": 24740,
                         "low": 24150,
                         "high": 24650
                   },
-                  "confidence": 0.65,
+                  "confidence": 1.00,
                   "confidence_factors": {
-                        "pattern": "高位震荡盘整",
-                        "usd": "美元走势成为短期变量",
-                        "geopolitical": "关注中东最新进展"
+                        "data_status": "SHFE已收盘，LME使用4/1官方价（4/2 Ring尚未开盘）",
+                        "source": "WorthWill/ZAMAK: SHFE结算¥24,740(区间24,590-25,065); LME Cash Official $3,583.5(4/1); SMM现货¥24,630; DXY 100.07",
+                        "deviation_lme": "+1.43%",
+                        "deviation_shfe": "+1.39%"
                   },
-                  "driver": "高位震荡盘整；市场消化地缘溢价，关注中东局势最新进展"
+                  "driver": "美国分级关税落地（成品铝25%/原材料50%），LME库存告急（注销仓单39.5%），中国产能触顶4500万吨；沪铝¥24,740(-85)高位震荡"
             },
             {
                   "date": "2026-04-03",
@@ -639,6 +646,30 @@
                         "baseline": "基于当前信息基准外推"
                   },
                   "driver": "第三周中段预测；仅为基准外推，实际受新信息驱动，下方有成本支撑"
+            },
+            {
+                  "date": "2026-04-16",
+                  "weekday": "周四",
+                  "is_actual": false,
+                  "lme": {
+                        "predicted": 3436,
+                        "actual": null,
+                        "low": 3367,
+                        "high": 3505
+                  },
+                  "shfe": {
+                        "predicted": 23970,
+                        "actual": null,
+                        "low": 23700,
+                        "high": 24240
+                  },
+                  "confidence": 0.40,
+                  "confidence_factors": {
+                        "time_decay": "最远期预测，仅供参考",
+                        "uncertainty": "两周后市场变量难以预判",
+                        "baseline": "基于当前趋势线性外推"
+                  },
+                  "driver": "第三周末段远期基准预测；关注中东供应恢复与实际消费数据验证"
             }
       ]
 };
