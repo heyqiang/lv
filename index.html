@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>铝价预测周报 | 2026年3月30日-4月16日</title>
+  <title>铝价预测周报 | 2026年3月18日-4月21日</title>
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0"></script>
   <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-annotation@3.0.1"></script>
   <style>
@@ -162,15 +162,13 @@
     const DATA = {
       "meta": {
             "title": "铝价预测周报",
-            "period": "2026-03-16 ~ 2026-04-17",
+            "period": "2026-03-18 ~ 2026-04-21",
             "timezone": "Asia/Shanghai",
-            "updated": "2026-04-07T01:43:00+08:00"
+            "updated": "2026-04-07T16:40:00+08:00"
       },
       "lme": {
             "unit": "美元/吨",
             "dates": [
-                  "3/16",
-                  "3/17",
                   "3/18",
                   "3/19",
                   "3/20",
@@ -193,11 +191,11 @@
                   "4/14",
                   "4/15",
                   "4/16",
-                  "4/17"
+                  "4/17",
+                  "4/20",
+                  "4/21"
             ],
             "actual": [
-                  3250,
-                  3270,
                   3310,
                   3340,
                   3192,
@@ -220,11 +218,11 @@
                   null,
                   null,
                   null,
+                  null,
+                  null,
                   null
             ],
             "predicted": [
-                  null,
-                  null,
                   null,
                   null,
                   null,
@@ -247,14 +245,14 @@
                   3446,
                   3441,
                   3436,
-                  3431
+                  3431,
+                  3426,
+                  3421
             ]
       },
       "shfe": {
             "unit": "元/吨",
             "dates": [
-                  "3/16",
-                  "3/17",
                   "3/18",
                   "3/19",
                   "3/20",
@@ -277,11 +275,11 @@
                   "4/14",
                   "4/15",
                   "4/16",
-                  "4/17"
+                  "4/17",
+                  "4/20",
+                  "4/21"
             ],
             "actual": [
-                  23500,
-                  23550,
                   23700,
                   23800,
                   23400,
@@ -295,6 +293,8 @@
                   24760,
                   24720,
                   24660,
+                  null,
+                  24630,
                   null,
                   null,
                   null,
@@ -315,15 +315,13 @@
                   null,
                   null,
                   null,
-                  null,
-                  null,
                   23935.0,
                   24690,
                   24760,
                   24720,
                   24660,
                   24250,
-                  24200,
+                  24630,
                   24160,
                   24120,
                   24090,
@@ -331,7 +329,9 @@
                   24030,
                   24000,
                   23970,
-                  23940
+                  23940,
+                  23910,
+                  23880
             ]
       },
       "daily_forecast": [
@@ -465,7 +465,7 @@
             {
                   "date": "2026-04-06",
                   "weekday": "周一",
-                  "is_actual": false,
+                  "is_actual": true,
                   "lme": {
                         "predicted": 3497,
                         "actual": null,
@@ -478,20 +478,19 @@
                         "low": 23980,
                         "high": 24520
                   },
-                  "confidence": 0.55,
+                  "confidence": 1.00,
                   "confidence_factors": {
-                        "data_status": "LME官方结算待发布，SHFE待开盘",
-                        "source": "COMEX Al $3,410/mt (comexlive.org); DXY≈100.02 (Investing.com); LME官方结算尚未见于Westmetall/ZAMAK",
-                        "geopolitical": "中东供应冲击持续：EGA Al Taweelah+Alba force majeure延续；LME库存411,950吨（多年低位）",
-                        "tariff": "美国Section 232关税重组4月6日00:01 EDT生效：铝制品50%全值征收，衍生品25%，英国来源25%",
-                        "warnings": "关税全值征收方式改变（此前仅对金属含量征税）显著增加下游进口成本，短期需求忧虑偏空；供应端冲击支撑基本面偏多；双向压力下价格区间震荡"
+                        "data_status": "双节休市：SHFE清明节假期(4/4-4/6)、LME复活节假期(4/3 Good Friday & 4/6 Easter Monday)，均无交易数据",
+                        "source": "SHFE节假日公告; LME官方节假日日历",
+                        "deviation_lme": "N/A（市场休市）",
+                        "deviation_shfe": "N/A（市场休市）"
                   },
-                  "driver": "美国Section 232关税重组于4月6日生效：铝/钢/铜制品50%全值关税（方法论重大变化，由仅对金属含量征税改为全价值），衍生品25%，英国来源25%；COMEX铝收$3,410/mt(+0.26%); DXY收100.02(-0.24%)，美元走弱略利多；LME库存411,950吨续创多年低位；EGA+Alba force majeure持续，中东供应冲击支撑基本面；Guinea铝土矿出口限额收紧；中国产能触顶4500万吨/年；分析师目标Q2 $4,000/吨（若霍尔木兹海峡持续关闭）"
+                  "driver": "清明节(SHFE 4/4-4/6)及复活节(LME 4/3 Good Friday & 4/6 Easter Monday)双节共休，两市均无交易；节前末日4/3 LME收$3,465.5，SHFE收¥24,660"
             },
             {
                   "date": "2026-04-07",
                   "weekday": "周二",
-                  "is_actual": false,
+                  "is_actual": true,
                   "lme": {
                         "predicted": 3482,
                         "actual": null,
@@ -500,17 +499,18 @@
                   },
                   "shfe": {
                         "predicted": 24200,
-                        "actual": null,
+                        "actual": 24630,
                         "low": 23930,
                         "high": 24470
                   },
-                  "confidence": 0.5,
+                  "confidence": 1.00,
                   "confidence_factors": {
-                        "time_decay": "远期预测不确定性增大",
-                        "mean_reversion": "均值回归压力渐显",
-                        "demand": "下游消费数据待验证"
+                        "data_status": "SHFE已收盘，LME今日尚未结算（复活节后首日，结算约21:00北京时间）",
+                        "source": "SMM上海有色网 AL0000 ¥24,630; 长江有色A00 ¥24,470; SMM现货(沪) ¥24,480; LME最新报$3,465.5(4/3结算); DXY≈99.81",
+                        "deviation_lme": "待结算",
+                        "deviation_shfe": "+1.78%"
                   },
-                  "driver": "地缘溢价逐步消化，市场关注实际消费能否支撑高位价格"
+                  "driver": "清明节&复活节后双节首日：SHFE收¥24,630(-30)，节后小幅回落；LME今日恢复交易（复活节后首日），最新$3,465.5；长江有色¥24,470，SMM现货¥24,480；中东EGA+Alba力不可抗延续；几内亚铝土矿出口限额收紧压力仍在"
             },
             {
                   "date": "2026-04-08",
@@ -703,6 +703,54 @@
                         "baseline": "基于当前趋势线性外推"
                   },
                   "driver": "第三周末段远期基准预测；周末前获利了结压力，关注中东局势与中国下游消费验证"
+            },
+            {
+                  "date": "2026-04-20",
+                  "weekday": "周一",
+                  "is_actual": false,
+                  "lme": {
+                        "predicted": 3426,
+                        "actual": null,
+                        "low": 3357,
+                        "high": 3495
+                  },
+                  "shfe": {
+                        "predicted": 23910,
+                        "actual": null,
+                        "low": 23640,
+                        "high": 24180
+                  },
+                  "confidence": 0.40,
+                  "confidence_factors": {
+                        "time_decay": "最远期预测，仅供参考",
+                        "uncertainty": "两周后市场变量难以预判",
+                        "baseline": "基于当前趋势线性外推"
+                  },
+                  "driver": "第四周开盘远期预测；关注中东供应恢复进展与中国二季度消费旺季启动情况"
+            },
+            {
+                  "date": "2026-04-21",
+                  "weekday": "周二",
+                  "is_actual": false,
+                  "lme": {
+                        "predicted": 3421,
+                        "actual": null,
+                        "low": 3352,
+                        "high": 3490
+                  },
+                  "shfe": {
+                        "predicted": 23880,
+                        "actual": null,
+                        "low": 23610,
+                        "high": 24150
+                  },
+                  "confidence": 0.40,
+                  "confidence_factors": {
+                        "time_decay": "最远期预测，仅供参考",
+                        "uncertainty": "两周后市场变量难以预判",
+                        "baseline": "基于当前下行趋势线性外推"
+                  },
+                  "driver": "第四周预测；供需博弈新均衡，中东供应溢价逐步消化，关注实际消费数据验证"
             }
       ]
 };
