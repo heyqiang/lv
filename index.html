@@ -162,14 +162,13 @@
     const DATA = {
       "meta": {
             "title": "铝价预测周报",
-            "period": "2026-03-20 ~ 2026-04-23",
+            "period": "2026-03-23 ~ 2026-04-24",
             "timezone": "Asia/Shanghai",
-            "updated": "2026-04-10T01:33:00+08:00"
+            "updated": "2026-04-10T16:48:00+08:00"
       },
       "lme": {
             "unit": "美元/吨",
             "dates": [
-                  "3/20",
                   "3/23",
                   "3/24",
                   "3/25",
@@ -193,10 +192,10 @@
                   "4/20",
                   "4/21",
                   "4/22",
-                  "4/23"
+                  "4/23",
+                  "4/24"
             ],
             "actual": [
-                  3192,
                   3240,
                   3265,
                   3280,
@@ -220,10 +219,10 @@
                   null,
                   null,
                   null,
+                  null,
                   null
             ],
             "predicted": [
-                  null,
                   null,
                   null,
                   null,
@@ -247,13 +246,13 @@
                   3372,
                   3367,
                   3363,
-                  3358
+                  3358,
+                  3353
             ]
       },
       "shfe": {
             "unit": "元/吨",
             "dates": [
-                  "3/20",
                   "3/23",
                   "3/24",
                   "3/25",
@@ -277,10 +276,10 @@
                   "4/20",
                   "4/21",
                   "4/22",
-                  "4/23"
+                  "4/23",
+                  "4/24"
             ],
             "actual": [
-                  23400,
                   23550,
                   23810,
                   23750,
@@ -295,6 +294,7 @@
                   24630,
                   24780,
                   24580,
+                  25235,
                   null,
                   null,
                   null,
@@ -312,7 +312,6 @@
                   null,
                   null,
                   null,
-                  null,
                   23935.0,
                   24690,
                   24760,
@@ -322,16 +321,17 @@
                   24630,
                   24780,
                   24580,
-                  24090,
-                  24060,
-                  24030,
-                  24000,
-                  23970,
-                  23940,
-                  23910,
-                  23880,
-                  23850,
-                  23820
+                  25235,
+                  25204,
+                  25173,
+                  25141,
+                  25110,
+                  25078,
+                  25047,
+                  25016,
+                  24984,
+                  24953,
+                  24919
             ]
       },
       "daily_forecast": [
@@ -565,7 +565,7 @@
             {
                   "date": "2026-04-10",
                   "weekday": "周五",
-                  "is_actual": false,
+                  "is_actual": true,
                   "lme": {
                         "predicted": 3402,
                         "actual": null,
@@ -574,17 +574,18 @@
                   },
                   "shfe": {
                         "predicted": 24090,
-                        "actual": null,
+                        "actual": 25235,
                         "low": 23820,
                         "high": 24360
                   },
-                  "confidence": 0.60,
+                  "confidence": 1.00,
                   "confidence_factors": {
-                        "time_decay": "近期预测，已按4/7实际校准",
-                        "weekend_effect": "周末避险减仓",
-                        "trend": "校准后高位震荡趋势"
+                        "data_status": "SHFE已收盘，LME 4/10结算待确认",
+                        "source": "东方财富/SHFE: 沪铝主连¥25,235(+530,+2.14%); DXY 98.8738; 长江有色4/9¥24,410; LME 4/9官方$3,494.5",
+                        "deviation_lme": "待确认",
+                        "deviation_shfe": "+4.75%"
                   },
-                  "driver": "校准后预测：LME维持高位；周末获利了结压力；中东供应及美关税政策是主要支撑"
+                  "driver": "美关税体系(4/6)调整+中东EGA/Alba供应持续受损，沪铝暴涨2.14%至¥25,235；DXY 98.87弱美元利好；SHFE偏差+4.75%超3%，后续预测已校准"
             },
             {
                   "date": "2026-04-13",
@@ -597,14 +598,14 @@
                         "high": 3463
                   },
                   "shfe": {
-                        "predicted": 24060,
+                        "predicted": 25204,
                         "actual": null,
-                        "low": 23790,
-                        "high": 24330
+                        "low": 24921,
+                        "high": 25486
                   },
                   "confidence": 0.50,
                   "confidence_factors": {
-                        "time_decay": "中期预测，已按4/7实际校准",
+                        "time_decay": "中期预测，已按4/10实际校准",
                         "uncertainty": "市场可能出现新催化剂",
                         "baseline": "基于校准后趋势外推"
                   },
@@ -621,14 +622,14 @@
                         "high": 3460
                   },
                   "shfe": {
-                        "predicted": 24030,
+                        "predicted": 25173,
                         "actual": null,
-                        "low": 23760,
-                        "high": 24300
+                        "low": 24889,
+                        "high": 25455
                   },
                   "confidence": 0.50,
                   "confidence_factors": {
-                        "time_decay": "中期预测，已按4/7实际校准",
+                        "time_decay": "中期预测，已按4/10实际校准",
                         "uncertainty": "10天外预测受新信息影响大",
                         "baseline": "基于校准后趋势外推"
                   },
@@ -645,14 +646,14 @@
                         "high": 3455
                   },
                   "shfe": {
-                        "predicted": 24000,
+                        "predicted": 25141,
                         "actual": null,
-                        "low": 23730,
-                        "high": 24270
+                        "low": 24858,
+                        "high": 25424
                   },
                   "confidence": 0.50,
                   "confidence_factors": {
-                        "time_decay": "中期预测，已按4/7实际校准",
+                        "time_decay": "中期预测，已按4/10实际校准",
                         "uncertainty": "两周后市场变量难以预判",
                         "baseline": "基于校准后趋势外推"
                   },
@@ -669,14 +670,14 @@
                         "high": 3450
                   },
                   "shfe": {
-                        "predicted": 23970,
+                        "predicted": 25110,
                         "actual": null,
-                        "low": 23700,
-                        "high": 24240
+                        "low": 24827,
+                        "high": 25392
                   },
                   "confidence": 0.40,
                   "confidence_factors": {
-                        "time_decay": "远期预测，已按4/7实际校准",
+                        "time_decay": "远期预测，已按4/10实际校准",
                         "uncertainty": "两周后市场变量难以预判",
                         "baseline": "基于校准后趋势线性外推"
                   },
@@ -693,14 +694,14 @@
                         "high": 3445
                   },
                   "shfe": {
-                        "predicted": 23940,
+                        "predicted": 25078,
                         "actual": null,
-                        "low": 23670,
-                        "high": 24210
+                        "low": 24795,
+                        "high": 25361
                   },
                   "confidence": 0.40,
                   "confidence_factors": {
-                        "time_decay": "远期预测，已按4/7实际校准",
+                        "time_decay": "远期预测，已按4/10实际校准",
                         "uncertainty": "两周后市场变量难以预判",
                         "baseline": "基于校准后趋势线性外推"
                   },
@@ -717,14 +718,14 @@
                         "high": 3440
                   },
                   "shfe": {
-                        "predicted": 23910,
+                        "predicted": 25047,
                         "actual": null,
-                        "low": 23640,
-                        "high": 24180
+                        "low": 24764,
+                        "high": 25330
                   },
                   "confidence": 0.40,
                   "confidence_factors": {
-                        "time_decay": "远期预测，已按4/7实际校准",
+                        "time_decay": "远期预测，已按4/10实际校准",
                         "uncertainty": "两周后市场变量难以预判",
                         "baseline": "基于校准后趋势线性外推"
                   },
@@ -741,14 +742,14 @@
                         "high": 3436
                   },
                   "shfe": {
-                        "predicted": 23880,
+                        "predicted": 25016,
                         "actual": null,
-                        "low": 23610,
-                        "high": 24150
+                        "low": 24732,
+                        "high": 25298
                   },
                   "confidence": 0.40,
                   "confidence_factors": {
-                        "time_decay": "远期预测，已按4/7实际校准",
+                        "time_decay": "远期预测，已按4/10实际校准",
                         "uncertainty": "两周后市场变量难以预判",
                         "baseline": "基于校准后趋势线性外推"
                   },
@@ -765,14 +766,14 @@
                         "high": 3431
                   },
                   "shfe": {
-                        "predicted": 23850,
+                        "predicted": 24984,
                         "actual": null,
-                        "low": 23580,
-                        "high": 24120
+                        "low": 24701,
+                        "high": 25267
                   },
                   "confidence": 0.40,
                   "confidence_factors": {
-                        "time_decay": "最远期预测，仅供参考，已按4/9实际校准",
+                        "time_decay": "远期预测，已按4/10实际校准",
                         "uncertainty": "两周后市场变量难以预判",
                         "baseline": "基于校准后趋势线性外推"
                   },
@@ -789,18 +790,42 @@
                         "high": 3427
                   },
                   "shfe": {
-                        "predicted": 23820,
+                        "predicted": 24953,
                         "actual": null,
-                        "low": 23550,
-                        "high": 24090
+                        "low": 24670,
+                        "high": 25236
                   },
                   "confidence": 0.40,
                   "confidence_factors": {
-                        "time_decay": "最远期预测，仅供参考，已按4/9实际校准",
+                        "time_decay": "最远期预测，仅供参考，已按4/10实际校准",
                         "uncertainty": "两周后市场变量难以预判",
                         "baseline": "基于校准后趋势线性外推"
                   },
                   "driver": "第四周末段校准预测；关注中东供应恢复与中国二季度消费旺季数据验证"
+            },
+            {
+                  "date": "2026-04-24",
+                  "weekday": "周五",
+                  "is_actual": false,
+                  "lme": {
+                        "predicted": 3353,
+                        "actual": null,
+                        "low": 3284,
+                        "high": 3422
+                  },
+                  "shfe": {
+                        "predicted": 24919,
+                        "actual": null,
+                        "low": 24637,
+                        "high": 25204
+                  },
+                  "confidence": 0.40,
+                  "confidence_factors": {
+                        "time_decay": "最远期预测，仅供参考，已按4/10实际校准",
+                        "uncertainty": "两周后市场变量难以预判",
+                        "baseline": "基于校准后趋势线性外推"
+                  },
+                  "driver": "第四周末段校准预测；周末获利了结压力，关注中东局势与中国下游消费数据验证"
             }
       ]
 };
