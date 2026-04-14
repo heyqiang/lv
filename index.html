@@ -105,7 +105,7 @@
   <div class="header">
     <div class="container">
       <h1>铝价预测周报</h1>
-      <div class="subtitle">2026年3月20日 - 4月23日（含今日收盘及未来10个交易日） | 北京时间</div>
+      <div class="subtitle">2026年3月25日 - 4月28日（含今日收盘及未来10个交易日） | 北京时间</div>
       <div id="timestamps" style="margin-top:6px; font-size:12px; opacity:0.5; line-height:1.8;"></div>
       <a href="pipeline.html" style="display:inline-block;margin-top:10px;padding:4px 14px;font-size:12px;color:rgba(255,255,255,.7);border:1px solid rgba(255,255,255,.2);border-radius:20px;text-decoration:none;transition:all .2s;" onmouseover="this.style.color='#fff';this.style.borderColor='rgba(255,255,255,.5)'" onmouseout="this.style.color='rgba(255,255,255,.7)';this.style.borderColor='rgba(255,255,255,.2)'">&#9881; 查看数据管线流程</a>
     </div>
@@ -162,14 +162,13 @@
     const DATA = {
       "meta": {
             "title": "铝价预测周报",
-            "period": "2026-03-24 ~ 2026-04-27",
+            "period": "2026-03-25 ~ 2026-04-28",
             "timezone": "Asia/Shanghai",
-            "updated": "2026-04-14T01:41:00+08:00"
+            "updated": "2026-04-14T16:33:00+08:00"
       },
       "lme": {
             "unit": "美元/吨",
             "dates": [
-                  "3/24",
                   "3/25",
                   "3/26",
                   "3/27",
@@ -193,10 +192,10 @@
                   "4/22",
                   "4/23",
                   "4/24",
-                  "4/27"
+                  "4/27",
+                  "4/28"
             ],
             "actual": [
-                  3265,
                   3280,
                   3350,
                   3284.5,
@@ -211,6 +210,7 @@
                   3494.5,
                   3447.5,
                   3567.55,
+                  3560,
                   null,
                   null,
                   null,
@@ -226,7 +226,6 @@
                   null,
                   null,
                   null,
-                  null,
                   3381,
                   3585,
                   3583.5,
@@ -238,7 +237,7 @@
                   3494.5,
                   3447.5,
                   3567.55,
-                  3562,
+                  3560,
                   3557,
                   3553,
                   3548,
@@ -247,13 +246,13 @@
                   3532,
                   3527,
                   3521,
-                  3516
+                  3516,
+                  3511
             ]
       },
       "shfe": {
             "unit": "元/吨",
             "dates": [
-                  "3/24",
                   "3/25",
                   "3/26",
                   "3/27",
@@ -277,10 +276,10 @@
                   "4/22",
                   "4/23",
                   "4/24",
-                  "4/27"
+                  "4/27",
+                  "4/28"
             ],
             "actual": [
-                  23810,
                   23750,
                   23900,
                   23795,
@@ -295,6 +294,7 @@
                   24580,
                   25235,
                   24760,
+                  24750,
                   null,
                   null,
                   null,
@@ -310,7 +310,6 @@
                   null,
                   null,
                   null,
-                  null,
                   23935.0,
                   24690,
                   24760,
@@ -322,7 +321,7 @@
                   24580,
                   25235,
                   24760,
-                  25173,
+                  24750,
                   25141,
                   25110,
                   25078,
@@ -331,7 +330,8 @@
                   24984,
                   24953,
                   24919,
-                  24888
+                  24888,
+                  24857
             ]
       },
       "daily_forecast": [
@@ -615,26 +615,27 @@
             {
                   "date": "2026-04-14",
                   "weekday": "周二",
-                  "is_actual": false,
+                  "is_actual": true,
                   "lme": {
                         "predicted": 3562,
-                        "actual": null,
+                        "actual": 3560,
                         "low": 3491,
                         "high": 3634
                   },
                   "shfe": {
                         "predicted": 25173,
-                        "actual": null,
+                        "actual": 24750,
                         "low": 24889,
                         "high": 25455
                   },
-                  "confidence": 0.60,
+                  "confidence": 1.00,
                   "confidence_factors": {
-                        "time_decay": "短期预测，已按4/13实际校准",
-                        "uncertainty": "LME偏差+5.02%已修正基准",
-                        "baseline": "基于4/13校准后趋势外推"
+                        "data_status": "SHFE已收盘，LME下午场尚未官方结算",
+                        "source": "长江有色A00现货¥24,550(+80); SMM/SHFE沪铝主力¥24,750; LME最新可用$3,560(参考4/13官方$3,567.55); DXY≈99",
+                        "deviation_lme": "-0.06%",
+                        "deviation_shfe": "-1.80%"
                   },
-                  "driver": "校准后短期预测；关注中东局势演变与美伊谈判进展"
+                  "driver": "美伊谈判无进展，中东局势持续紧张；霍尔木兹封锁延续压制海湾铝供应；沪铝高位整理收¥24,750；LME盘中约$3,560；DXY≈99稳定"
             },
             {
                   "date": "2026-04-15",
@@ -851,6 +852,30 @@
                         "baseline": "基于4/13校准后趋势线性外推"
                   },
                   "driver": "第五周开盘校准预测；关注中东局势进展与中国二季度消费旺季验证"
+            },
+            {
+                  "date": "2026-04-28",
+                  "weekday": "周二",
+                  "is_actual": false,
+                  "lme": {
+                        "predicted": 3511,
+                        "actual": null,
+                        "low": 3440,
+                        "high": 3582
+                  },
+                  "shfe": {
+                        "predicted": 24857,
+                        "actual": null,
+                        "low": 24375,
+                        "high": 25339
+                  },
+                  "confidence": 0.40,
+                  "confidence_factors": {
+                        "time_decay": "最远期预测（10交易日），已按4/14实际校准",
+                        "uncertainty": "两周后市场变量难以预判",
+                        "baseline": "基于4/14实际趋势线性外推"
+                  },
+                  "driver": "第五周二校准预测；关注中东局势恢复进展与中国二季度消费旺季数据验证"
             }
       ]
 };
