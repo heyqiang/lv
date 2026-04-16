@@ -164,7 +164,7 @@
             "title": "铝价预测周报",
             "period": "2026-03-25 ~ 2026-04-28",
             "timezone": "Asia/Shanghai",
-            "updated": "2026-04-16T01:31:00+08:00"
+            "updated": "2026-04-17T01:32:00+08:00"
       },
       "lme": {
             "unit": "美元/吨",
@@ -211,7 +211,7 @@
                   3567.55,
                   3625,
                   3581,
-                  null,
+                  3624,
                   null,
                   null,
                   null,
@@ -238,7 +238,7 @@
                   3567.55,
                   3625,
                   3581,
-                  3553,
+                  3624,
                   3548,
                   3541,
                   3536,
@@ -666,10 +666,10 @@
             {
                   "date": "2026-04-16",
                   "weekday": "周四",
-                  "is_actual": false,
+                  "is_actual": true,
                   "lme": {
                         "predicted": 3553,
-                        "actual": null,
+                        "actual": 3624,
                         "low": 3480,
                         "high": 3623
                   },
@@ -679,13 +679,15 @@
                         "low": 24827,
                         "high": 25392
                   },
-                  "confidence": 0.50,
+                  "confidence": 1.00,
                   "confidence_factors": {
-                        "time_decay": "中期预测，已按4/13实际校准",
-                        "uncertainty": "LME偏差+5.02%已修正基准",
-                        "baseline": "基于4/13校准后趋势线性外推"
+                        "data_status": "LME电子收盘已确认/SHFE下午场未更新（待补充）",
+                        "source": "Worthwill/TradingEconomics/Multiple: LME Close $3,624(4/16,+1.12%/+$43，较前日$3,581); Westmetall官方结算待发布确认；3-month $3,644.50(+0.7%); DXY≈98.05(-0.0%); Bloomberg 4/16: 铝市进入持续供应'黑洞'",
+                        "deviation_lme": "+2.00%",
+                        "deviation_shfe": "N/A（SHFE数据待更新）",
+                        "warnings": "下午场未运行，SHFE数据缺失待补充；LME使用电子收盘价$3,624（Westmetall官方结算待确认）"
                   },
-                  "driver": "校准后中期预测；关注中东供应恢复与实际消费数据验证"
+                  "driver": "霍尔木兹封锁持续+EGA Al Taweelah停产延续供应紧张，LME铝价反弹至$3,624(+1.12%/+$43)；Bloomberg报道铝市进入持续供应'黑洞'（4/16），Wood Mackenzie预测2026年全球赤字最高400万吨；伊朗-美国两周停火含霍尔木兹重开条款，但以色列黎巴嫩局势威胁协议稳定；3-month合约$3,644.50(+0.7%)维持强势；DXY约98.05弱美元水平续撑金属；LME偏差+2.00%，未超3%阈值，后续预测维持"
             },
             {
                   "date": "2026-04-17",
